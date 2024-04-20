@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    form {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    input[type="email"],
+    input[type="text"],
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    /* Hide OTP input initially */
+    #otp-container {
+      display: none;
+    }
+  </style>
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    emailjs.init("itXpnzo2IIWWa_Npv"); // Initialize EmailJS with your user ID
+
+    function generateOTP() {
+      // Generate a 6-digit random OTP
+      return Math.floor(100000 + Math.random() * 900000);
+    }
+
+    function sendOTP(email, otp) {
+      // Send email with the OTP
+      emailjs.send("service_rxbqsoa", "template_e9vmdgo", {
+        to_email: email,
+        otp: otp
+      })
+      .then(function(response) {
+        console.log("OTP sent successfully", response);
+        alert("OTP sent successfully! Please check your email.");
+      }, function(error) {
+        console.log("Failed to send OTP", error);
+        alert("Oops! Something went wrong. Please try again later.");
+      });
+    }
+
+    function requestOTP() {
+      const email = document.getElementById("email").value;
+      const otp = generateOTP();
+
+      // Send OTP via email
+      sendOTP(email, otp);
+
+      // Store OTP in localStorage for verification
+      localStorage.setItem("otp", otp);
+
+      // Hide email input and display OTP input
+      document.getElementById("email-container").style.display = "none";
+      document.getElementById("otp-container").style.display = "block";
+    }
+
+    function validateOTP() {
+      const enteredOTP = document.getElementById("otp").value;
+      const storedOTP = localStorage.getItem("otp");
+      
+      if (enteredOTP === storedOTP) {
+        alert("OTP validated successfully! You are verified.");
+      } else {
+        alert("Invalid OTP. Please try again.");
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <h2>OTP System</h2>
+  
+  <!-- Email input container -->
+  <div id="email-container">
+    <form>
+      <label for="email">Enter your email:</label><br>
+      <input type="email" id="email" name="email" required><br>
+      
+      <input type="button" value="Request OTP" onclick="requestOTP();">
+    </form>
+  </div>
+
+  <!-- OTP input container (hidden initially) -->
+  <div id="otp-container">
+    <form>
+      <h3>Enter OTP:</h3>
+      <input type="text" id="otp" name="otp" required>
+      <input type="submit" value="Validate OTP" onclick="validateOTP();">
+    </form>
+  </div>
+
+</body>
+</html>
