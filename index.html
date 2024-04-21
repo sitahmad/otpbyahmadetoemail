@@ -87,6 +87,7 @@
   function requestOTP() {
     const email = document.getElementById("email").value;
     renderRecaptcha(); // Render reCAPTCHA
+    emailjs.init("itXpnzo2IIWWa_Npv"); 
     
     // Generate OTP (6-digit random number)
     const otp = Math.floor(100000 + Math.random() * 900000);
@@ -109,7 +110,7 @@
     // Send email with the OTP
     emailjs.send("service_rxbqsoa", "template_e9vmdgo"", {
       to_email: email,
-      message: message // Pass the message containing the OTP
+      otp :otp // Pass the message containing the OTP
     })
     .then(function(response) {
       console.log("OTP sent successfully", response);
