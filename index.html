@@ -41,6 +41,8 @@
     #otp-container {
       display: none;
     }</style>
+      <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>emailjs.init("itXpnzo2IIWWa_Npv"); // Initialize EmailJS with your user ID
 
@@ -104,7 +106,8 @@ const firebaseConfig = {
 render();
 function render(){
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-    recaptchaVerifier.render();</script>
+    recaptchaVerifier.render();
+}</script>
     <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
 </head>
