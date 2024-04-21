@@ -68,15 +68,15 @@
 </div>
 
 <script>
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
-  };
+ const firebaseConfig = {
+  apiKey: "AIzaSyCobIRZ3KhZwONj51onZO1HosAv_ZZaWqk",
+  authDomain: "ahmad-bc991.firebaseapp.com",
+  projectId: "ahmad-bc991",
+  storageBucket: "ahmad-bc991.appspot.com",
+  messagingSenderId: "682986057976",
+  appId: "1:682986057976:web:aab8add441986cee864b0d",
+  measurementId: "G-81RJ2PBC8Z"
+};
   firebase.initializeApp(firebaseConfig);
 
   function renderRecaptcha() {
@@ -107,7 +107,7 @@
     const message = `Your OTP is: ${otp} \n🔒`; // Example including a lock emoji
 
     // Send email with the OTP
-    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+    emailjs.send("service_rxbqsoa", "template_e9vmdgo"", {
       to_email: email,
       message: message // Pass the message containing the OTP
     })
