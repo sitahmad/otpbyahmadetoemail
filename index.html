@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OTP System</title>
-<style>    body {
+  <style>
+    body {
       font-family: Arial, sans-serif;
     }
 
@@ -22,7 +23,6 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
-      
     }
 
     input[type="submit"] {
@@ -40,101 +40,96 @@
     /* Hide OTP input initially */
     #otp-container {
       display: none;
-    }</style>
-      <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
+    }
+  </style>
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <script>emailjs.init("itXpnzo2IIWWa_Npv"); // Initialize EmailJS with your user ID
+  <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js"></script>
+</head>
+<body>
 
-    function generateOTP() {
-      // Generate a 6-digit random OTP
-      return Math.floor(100000 + Math.random() * 900000);
-    }
+<!-- Email input container -->
+<div id="email-container">
+  <form>
+    <label for="email">Enter your email:</label><br>
+    <input type="email" id="email" name="email" required><br>
+    <div id="recaptcha-container"></div> <!-- This div will contain the reCAPTCHA -->
+    <input type="button" value="Request OTP" onclick="requestOTP();">
+  </form>
+</div>
 
-    function sendOTP(email, otp) {
-      // Send email with the OTP
-      emailjs.send("service_rxbqsoa", "template_e9vmdgo", {
-        to_email: email,
-        otp: otp
-      })
-      .then(function(response) {
-        console.log("OTP sent successfully", response);
-        alert("OTP sent successfully! Please check your email.");
-      }, function(error) {
-        console.log("Failed to send OTP", error);
-        alert("Oops! Something went wrong. Please try again later.");
-      });
-    }
+<!-- OTP input container (hidden initially) -->
+<div id="otp-container" style="display:none;">
+  <form>
+    <h3>Enter OTP:</h3>
+    <input type="text" id="otp" name="otp" required>
+    <input type="submit" value="Validate OTP" onclick="validateOTP();">
+  </form>
+</div>
 
-    function requestOTP() {
-      const email = document.getElementById("email").value;
-      const otp = generateOTP();
+<script>
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
 
-      // Send OTP via email
-      sendOTP(email, otp);
-
-      // Store OTP in localStorage for verification
-      localStorage.setItem("otp", otp);
-
-      // Hide email input and display OTP input
-      document.getElementById("email-container").style.display = "none";
-      document.getElementById("otp-container").style.display = "block";
-    }
-
-    function validateOTP() {
-      const enteredOTP = document.getElementById("otp").value;
-      const storedOTP = localStorage.getItem("otp");
-      
-      if (enteredOTP === storedOTP) {
-        alert("OTP validated successfully! You are verified.");
-      } else {
-        alert("Invalid OTP. Please try again.");
-      }
-    }</script>
-    <script>
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCobIRZ3KhZwONj51onZO1HosAv_ZZaWqk",
-  authDomain: "ahmad-bc991.firebaseapp.com",
-  projectId: "ahmad-bc991",
-  storageBucket: "ahmad-bc991.appspot.com",
-  messagingSenderId: "682986057976",
-  appId: "1:682986057976:web:aab8add441986cee864b0d",
-  measurementId: "G-81RJ2PBC8Z"
-};
-    firebase.initializeApp(firebaseConfig);
-render();
-function render(){
+  function renderRecaptcha() {
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
     recaptchaVerifier.render();
-}</script>
-    <script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.12.1/firebase-auth-compat.js"></script>
-</head>
-<body background="img.jpg">
+  }
 
+  function requestOTP() {
+    const email = document.getElementById("email").value;
+    renderRecaptcha(); // Render reCAPTCHA
+    
+    // Generate OTP (6-digit random number)
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
-  
-  <!-- Email input container -->
-  <div id="email-container">
-    <form>
-      <label for="email">Enter your email:</label><br>
-      <input type="email" id="email" name="email" required><br>
-      <div id="recaptcha-container"></div>
-      
-      
-      <input type="button" value="Request OTP" onclick="requestOTP();">
-    </form>
-  </div>
+    // Send OTP via email
+    sendOTP(email, otp);
 
-  <!-- OTP input container (hidden initially) -->
-  <div id="otp-container">
-    <form>
-      <h3>Enter OTP:</h3>
-      <input type="text" id="otp" name="otp" required>
-      <input type="submit" value="Validate OTP" onclick="validateOTP();">
-    </form>
-  </div>
+    // Store OTP in sessionStorage for verification
+    sessionStorage.setItem("otp", otp);
 
+    // Hide email input and display OTP input
+    document.getElementById("email-container").style.display = "none";
+    document.getElementById("otp-container").style.display = "block";
+  }
+
+  function sendOTP(email, otp) {
+    // You can include emojis directly in the email content
+    const message = `Your OTP is: ${otp} \n🔒`; // Example including a lock emoji
+
+    // Send email with the OTP
+    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+      to_email: email,
+      message: message // Pass the message containing the OTP
+    })
+    .then(function(response) {
+      console.log("OTP sent successfully", response);
+      alert("OTP sent successfully! Please check your email.");
+    }, function(error) {
+      console.log("Failed to send OTP", error);
+      alert("Oops! Something went wrong. Please try again later.");
+    });
+  }
+
+  function validateOTP() {
+    const enteredOTP = document.getElementById("otp").value;
+    const storedOTP = sessionStorage.getItem("otp");
+    
+    if (enteredOTP === storedOTP) {
+      alert("OTP validated successfully! You are verified.");
+    } else {
+      alert("Invalid OTP. Please try again.");
+    }
+  }
+</script>
 </body>
-</html> 
+</html>
